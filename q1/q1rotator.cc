@@ -37,7 +37,6 @@ int main(int argc, char *argv[]) {
       char direction = line[0];
       int amount = stoi(line.substr(1));
 
-      // applyRotationP1(dial, res, direction, amount);
       res += rotator(direction == 'R' ? amount : -amount);
     }
     in.close();
