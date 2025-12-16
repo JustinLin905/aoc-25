@@ -37,6 +37,9 @@ inline void sumInvalidIDs(long long intervalStart, long long intervalEnd,
         // PRINT(cout << "chunk: " << chunk << ", nextChunk: " << nextChunk
         //            << endl;)
 
+        // Note that we check if the chunk is less than the expected size: this
+        // means that the chunk started with a leading zero, and this cannot
+        // lead to an invalid ID
         if (chunk != -1 && (chunk != nextChunk || chunk < ipow(10, step - 1))) {
           invalidId = false;
           break;
