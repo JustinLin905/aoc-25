@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cassert>
 #include <cctype>
 #include <cmath>
 #include <fstream>
@@ -11,36 +12,40 @@
 
 using namespace std;
 
-#ifdef NOOUTPUT
-#define PRINT(stmt)
-#else
-#define PRINT(stmt) stmt
-#endif // NOOUTPUT
-
 int main(int argc, char *argv[]) {
-  if (argc < 2) {
-    cout << "Usage: " << argv[0] << " <filename>" << endl;
+  if (argc < 3) {
+    cout << "Usage: " << argv[0] << " <filename>" << " <batteryCount>" << endl;
     return 1;
   }
 
   string line;
   ifstream in(argv[1]);
-  long long res;
+  long long res = 0;
 
+  int batteryCount = stoi(argv[2]); // Battery count per row
+  char selectedBatteries[batteryCount];
+
+  string::iterator it;
   if (in.is_open()) {
     while (getline(in, line)) {
-      // Always best to take largest first number (not in last position)
-      // Tie-break with leftmost occurrence
-      // Second character is largest from that point out
-      auto firstIt = max_element(line.begin(), line.end() - 1);
-      char maxFirstChar = *firstIt;
-      auto secondIt = max_element(firstIt + 1, line.end());
-      char maxSecondChar = *secondIt;
+      string::iterator start = line.begin();
 
-      // chars are '0'-'9'
-      long long joltage = (maxFirstChar - '0') * 10 + (maxSecondChar - '0');
-      res += joltage;
+      for (int i = 0; i < batteryCount; i++) {
+        it = max_element(start, line.end() - (batteryCount - i - 1));
+        selectedBatteries[i] = *it; // Select this battery
+
+        start = it + 1; // Start selection range for next character strictly
+        // after the chosen character
+      }
+
+      long long rowJoltage = 0;
+      for (int i = 0; i < batteryCount; i++) {
+        // chars are '0'-'9'
+        rowJoltage = (rowJoltage * 10) + (selectedBatteries[i] - '0');
+      }
+      res += rowJoltage;
     }
+
     in.close();
   } else {
     cout << "Unable to open file error";
