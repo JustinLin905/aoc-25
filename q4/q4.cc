@@ -36,13 +36,17 @@ int countAdjTiles(const vector<vector<char>> &graph, int r, int c) {
 
 int main(int argc, char *argv[]) {
   if (argc < 2) {
-    cout << "Usage: " << argv[0] << " <filename>" << endl;
+    cout << "Usage: " << argv[0] << " <filename>" << " <multipleRounds? (y/n)>"
+         << endl;
     return 1;
   }
 
   string line;
   ifstream in(argv[1]);
+  bool multipleRounds = argc == 3 && argv[2][0] == 'y' ? true : false;
+
   int totalRollCount = 0;
+  int roundRollCount = 0; // How many rolls were removed this round
 
   vector<vector<char>> graph;
 
@@ -63,13 +67,23 @@ int main(int argc, char *argv[]) {
   }
 
   // Check each tile in graph
-  for (int r = 0; r < graph.size(); r++) {
-    for (int c = 0; c < graph[r].size(); c++) {
-      if (graph[r][c] == '@' && countAdjTiles(graph, r, c) < ADJ_THRESHOLD) {
-        totalRollCount++;
+  do {
+    roundRollCount = 0;
+
+    for (int r = 0; r < graph.size(); r++) {
+      for (int c = 0; c < graph[r].size(); c++) {
+        if (graph[r][c] == '@' && countAdjTiles(graph, r, c) < ADJ_THRESHOLD) {
+          roundRollCount++;
+          totalRollCount++;
+
+          // Remove roll now (if multiple rounds/roll removal is enabled)
+          if (multipleRounds) {
+            graph[r][c] = 'x';
+          }
+        }
       }
     }
-  }
+  } while (multipleRounds && roundRollCount > 0);
 
   cout << "Output: " << totalRollCount << endl;
   return 0;
