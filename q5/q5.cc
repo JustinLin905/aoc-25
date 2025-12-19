@@ -86,6 +86,7 @@ int main(int argc, char *argv[]) {
   vector<pair<long long, long long>> intervals;
   vector<pair<long long, long long>> mergedIntervals;
   int freshCount = 0;
+  long long freshRangeSize = 0;
 
   if (in.is_open()) {
     // Ingest intervals
@@ -98,6 +99,11 @@ int main(int argc, char *argv[]) {
 
     // Sort and merge intervals
     mergedIntervals = mergeIntervals(intervals);
+
+    // P2: Count total IDs considered to be fresh
+    for (const auto &interval : mergedIntervals) {
+      freshRangeSize += interval.second - interval.first + 1;
+    }
 
     // Ingest IDs
     while (getline(in, line)) {
@@ -112,6 +118,8 @@ int main(int argc, char *argv[]) {
     cout << "Unable to open file error";
   }
 
-  cout << "Output: " << freshCount << endl;
+  cout << "P1: " << freshCount << endl;
+  cout << "P2: " << freshRangeSize << endl;
+
   return 0;
 }
