@@ -20,13 +20,14 @@ int main(int argc, char *argv[]) {
   string line;
   ifstream in(argv[1]);
 
-  if (in.is_open()) {
-    while (getline(in, line)) {
-    }
-    in.close();
-  } else {
-    cout << "Unable to open file error";
+  if (!in.is_open()) {
+    cerr << "Error opening file: " << argv[1] << endl;
+    return 1;
   }
+
+  while (getline(in, line)) {
+  }
+  in.close();
 
   cout << "Output: " << endl;
   return 0;
