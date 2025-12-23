@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+#include <cassert>
 #include <cctype>
 #include <cmath>
 #include <fstream>
@@ -11,5 +13,4 @@
 #include <string>
 #include <utility>
 
-#include "Point.h"
-#include "UnionFind.h"
+#include "Polygon.h"
