@@ -70,15 +70,6 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  // Hit test testing
-  //   Point inside(9, 2);
-  //   Point on(5, 5);
-  //   Point outside(13, 6);
-
-  //   assert(polygon.hitTest(inside));
-  //   assert(polygon.hitTest(on));
-  //   assert(!polygon.hitTest(outside));
-
   cout << "P1: " << static_cast<long long>(maxArea) << endl;
   cout << "P2: " << static_cast<long long>(maxRedGreenArea) << endl;
 

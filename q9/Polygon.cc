@@ -46,14 +46,8 @@ bool Polygon::hitTest(const Point &point) {
   // If number of intersections with vertical edges is odd, the point was within
   // the polygon
   if (intersectionCount & 1) {
-    // std::cout << "Point (" << point.x << ", " << point.y
-    //           << ") is inside the polygon with count: " << intersectionCount
-    //           << std::endl;
     return true;
   } else {
-    // std::cout << "Point (" << point.x << ", " << point.y
-    //           << ") is outside the polygon with count: " << intersectionCount
-    //           << std::endl;
     return false;
   }
 }
