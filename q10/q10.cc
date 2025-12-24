@@ -28,14 +28,6 @@ int binaryStringToInt(string binaryStr, char high) {
   return res;
 }
 
-int applyButtonToState(int state, int stateLen, const vector<int> &button) {
-  for (int lightIdx : button) {
-    state ^= 1 << (stateLen - lightIdx - 1);
-  }
-
-  return state;
-}
-
 int main(int argc, char *argv[]) {
   if (argc < 2) {
     cout << "Usage: " << argv[0] << " <filename>" << endl;
@@ -59,7 +51,7 @@ int main(int argc, char *argv[]) {
     int targetState = 0;
     int stateLen = 0; // Length needed to represent states in bits
     int numButtons = 0;
-    vector<vector<int>> buttons;
+    vector<int> buttons;
 
     // Process each string separated by whitespace
     string chunk;
@@ -73,11 +65,12 @@ int main(int argc, char *argv[]) {
 
         // Extract each comma-separated int
         stringstream bss(chunk.substr(1, chunk.size() - 2));
-        vector<int> newButton;
+        int newButton = 0;
         string token;
 
         while (getline(bss, token, ',')) {
-          newButton.push_back(stoi(token));
+          int lightIdx = stoi(token);
+          newButton |= (1 << (stateLen - lightIdx - 1));
         }
 
         buttons.push_back(newButton);
@@ -96,23 +89,22 @@ int main(int argc, char *argv[]) {
     }
 
     for (int idx = 1; idx < dp.size(); idx++) {
-      const vector<int> &button = buttons[idx - 1];
+      int button = buttons[idx - 1];
 
       for (int state = 0; state < dp[idx].size(); state++) {
         // Minimum cost to reach this state comes either from not pressing
         // current button, or pressing the current button
         // We must get the previous state if we pressed this button, found by
         // toggling every associated light
-        int prevState = applyButtonToState(state, stateLen, button);
+        int prevState = state ^ button;
         dp[idx][state] = min(dp[idx - 1][state], dp[idx - 1][prevState] + 1);
       }
     }
 
-    // cout << "Res for this row: " << dp[numButtons + 1][targetState] << endl;
     totalRequiredPushes += dp[numButtons][targetState];
   }
   in.close();
 
-  cout << "Output: " << totalRequiredPushes << endl;
+  cout << "P1: " << totalRequiredPushes << endl;
   return 0;
 }
