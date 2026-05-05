@@ -75,7 +75,8 @@ int main(int argc, char *argv[]) {
 
         buttons.push_back(newButton);
       } else if (chunk[0] == '{') {
-        // TODO
+        // P2 will be completed in a separate .cc file because I am curious
+        // about measuring timing
       }
     }
 
