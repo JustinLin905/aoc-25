@@ -14,9 +14,36 @@
 using namespace std;
 
 namespace constants {
-const string START = "you";
+const string START = "svr";
 const string END = "out";
+const string DAC = "dac";
+const string FFT = "fft";
 } // namespace constants
+
+// size_t is used to avoid silent overflow
+size_t dfs(const string &curNode, bool dac, bool fft,
+           const unordered_map<string, vector<string>> &graph,
+           unordered_map<string, size_t> &memo) {
+
+  const auto key = curNode + (dac ? "1" : "0") + (fft ? "1" : "0");
+  if (memo.find(key) != memo.end()) {
+    return memo[key];
+  }
+
+  if (curNode == constants::END) {
+    return dac && fft ? 1 : 0;
+  }
+
+  size_t result = 0;
+  // For each adjacent
+  for (const auto &adj : graph.at(curNode)) {
+    result += dfs(adj, dac || adj == constants::DAC,
+                  fft || adj == constants::FFT, graph, memo);
+  }
+
+  memo[key] = result;
+  return result;
+}
 
 int main(int argc, char *argv[]) {
   if (argc < 2) {
@@ -39,6 +66,8 @@ int main(int argc, char *argv[]) {
     auto pos = line.find(':');
     string sourceNode = line.substr(0, pos);
 
+    graph[sourceNode] = vector<string>();
+
     // Read arbitrary number of adjacent nodes
     istringstream iss(line.substr(pos + 2));
     string adjacentNode;
@@ -49,24 +78,9 @@ int main(int argc, char *argv[]) {
   }
   in.close();
 
-  // Start DAG traversal at node "you"
-  auto result = 0;
-  queue<string> q{{constants::START}};
-
-  for (; !q.empty(); q.pop()) {
-    string curNode = q.front();
-
-    if (curNode == constants::END) {
-      result++;
-      continue;
-    }
-
-    // For each adjacent
-    for (const auto &adj : graph[curNode]) {
-      q.push(adj);
-    }
-  }
-
-  cout << "Output: " << result << endl;
+  // Start DAG traversal at node "svr"
+  auto memo = unordered_map<string, size_t>();
+  cout << "Output: " << dfs(constants::START, false, false, graph, memo)
+       << endl;
   return 0;
 }
