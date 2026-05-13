@@ -63,6 +63,9 @@ int main(int argc, char *argv[]) {
   }
 
   vector<int> componentSizes = uf.getComponentSizes();
+
+  // Puts the (n-3)rd largest element in the correct position, and all larger
+  // elements after it
   nth_element(componentSizes.begin(), componentSizes.end() - 3,
               componentSizes.end());
 
