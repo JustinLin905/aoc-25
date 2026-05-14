@@ -52,7 +52,7 @@ bool Polygon::hitTest(const Point &point) {
   }
 }
 
-// If any edge strictly intersects with the interior of the rectangle, then the
+// If any edge intersects with the interior of the rectangle, then the
 // rectangle is not fully contained within the polygon.
 // The inverse is not necessarily true: we need to do an interior point test
 // (see main)
